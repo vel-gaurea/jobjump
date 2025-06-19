@@ -32,6 +32,15 @@ const JobListing = () => {
   } = useFetch(getCompanies);
 
 
+  useEffect(() => {
+    if (isLoaded) fnCompanies();
+  }, [isLoaded]);
+
+  useEffect(() => {
+    if (isLoaded) fnJobs();
+  }, [isLoaded, location, company_id, searchQuery]);
+
+
   const handleSearch = (e) => {
     e.preventDefault();
     let formData = new FormData(e.target);
@@ -45,14 +54,6 @@ const JobListing = () => {
     setCompany_id("")
     setLocation("")
   }
-
-  useEffect(() => {
-    if (isLoaded) fnCompanies();
-  }, [isLoaded]);
-
-  useEffect(() => {
-    if (isLoaded) fnJobs();
-  }, [isLoaded, location, company_id, searchQuery]);
 
 
   if (!isLoaded) {
@@ -71,7 +72,10 @@ const JobListing = () => {
           placeholder="Search Jobs by Title.."
           name="search-query"
           className="h-full flex-1 px-4 text-md"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
+
         <Button
           type="submit"
           className="h-full sm:w-28"
