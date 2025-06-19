@@ -69,9 +69,8 @@ const PostJob = () => {
   }, [isLoaded]);
 
   useEffect(() => {
-    if (dataCreateJob?.length > 0) navigate("/jobs");
-  }, [loadingCreateJob])
-
+    if (dataCreateJob?.length > 0) navigate('/jobs');
+  }, [loadingCreateJob]);
 
   const onSubmit = (data) => {
     fnCreateJob({
@@ -105,7 +104,7 @@ const PostJob = () => {
         {errors.description && <p className="text-red-500">{errors.description.message}</p>}
 
         {/* Location & Company */}
-        <div className="flex gap-4 items-center">
+        <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
           {/* Location */}
           <Controller
             name="location"
@@ -135,7 +134,12 @@ const PostJob = () => {
             render={({ field }) => (
               <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select Company" />
+                  <SelectValue placeholder="Select Company">
+                    {field.value
+                      ? companies?.find((com) => com.id === Number(field.value))
+                        ?.name
+                      : "Company"}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -150,7 +154,10 @@ const PostJob = () => {
             )}
           />
 
-          <AddCompanyDrawer fetchCompanies={fnCompanies} />
+          {/* Add Company */}
+          <div className="w-full sm:w-auto">
+            <AddCompanyDrawer fetchCompanies={fnCompanies} />
+          </div>
         </div>
 
         {errors.location && <p className="text-red-500">{errors.location.message}</p>}
@@ -160,12 +167,16 @@ const PostJob = () => {
         <Controller
           name="requirements"
           control={control}
-          render={({ field }) => <MDEditor value={field.value} onChange={field.onChange} />}
+          render={({ field }) => (
+            <MDEditor value={field.value} onChange={field.onChange} />
+          )}
         />
         {errors.requirements && <p className="text-red-500">{errors.requirements.message}</p>}
 
-
-        {errorCreateJob?.message && <p className="text-red-500">{errorCreateJob?.message}</p>}
+        {/* Error Message */}
+        {errorCreateJob?.message && (
+          <p className="text-red-500">{errorCreateJob?.message}</p>
+        )}
 
         {/* Loading Indicator */}
         {loadingCreateJob && <BarLoader width="100%" color="#36d7b7" />}

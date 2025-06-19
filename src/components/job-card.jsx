@@ -18,8 +18,8 @@ import { BarLoader } from "react-spinners";
 const JobCard = ({
   job,
   savedInit = false,
-  onJobAction = () => {},
   isMyJob = false,
+  onJobAction = () => { },
 }) => {
   const [saved, setSaved] = useState(savedInit);
 
@@ -33,7 +33,7 @@ const JobCard = ({
     loading: loadingSavedJob,
     data: savedJob,
     fn: fnSavedJob,
-  } = useFetch(saveJob);
+  } = useFetch(saveJob, { alreadySaved: saved });
 
   const handleSaveJob = async () => {
     await fnSavedJob({
@@ -57,18 +57,18 @@ const JobCard = ({
       {loadingDeleteJob && (
         <BarLoader className="mt-4" width={"100%"} color="#36d7b7" />
       )}
-      <CardHeader className="flex">
-        <CardTitle className="flex justify-between items-center w-full font-bold">
-          {job.title}
+      <CardHeader>
+        <div className="flex justify-between items-center">
+          <CardTitle className="font-bold text-lg">{job.title}</CardTitle>
           {isMyJob && (
             <Trash2Icon
               fill="red"
               size={18}
-              className="text-red-300 cursor-pointer flex-shrink-0"
+              className="text-red-300 cursor-pointer"
               onClick={handleDeleteJob}
             />
           )}
-        </CardTitle>
+        </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-4 flex-1">
         <div className="flex justify-between">
